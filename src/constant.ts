@@ -11,8 +11,8 @@ export const defaultMetadata: ConnectorMetadata = {
     'tr-TR': 'Ubill SMS',
     ko: 'Ubill SMS',
   },
-  logo: './logo.svg',
-  logoDark: null,
+  logo: './logo.png',
+  logoDark: './logo.png',
   description: {
     en: 'Send SMS via Ubill SMS gateway (Georgian phone numbers only)',
     'zh-CN': '通过 Ubill SMS 网关发送短信（仅限格鲁吉亚电话号码）',
