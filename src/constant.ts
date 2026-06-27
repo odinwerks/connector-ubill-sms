@@ -52,22 +52,35 @@ export const defaultMetadata: ConnectorMetadata = {
       defaultValue: [
         {
           usageType: 'SignIn',
-          content: 'Your verification code is {{code}}. The code will remain active for 10 minutes.',
+          content:
+            'Your verification code is {{code}}. The code will remain active for 10 minutes.',
         },
         {
           usageType: 'Register',
-          content: 'Your verification code is {{code}}. The code will remain active for 10 minutes.',
+          content:
+            'Your verification code is {{code}}. The code will remain active for 10 minutes.',
         },
         {
           usageType: 'ForgotPassword',
-          content: 'Your verification code is {{code}}. The code will remain active for 10 minutes.',
+          content:
+            'Your verification code is {{code}}. The code will remain active for 10 minutes.',
         },
         {
           usageType: 'Generic',
-          content: 'Your verification code is {{code}}. The code will remain active for 10 minutes.',
+          content:
+            'Your verification code is {{code}}. The code will remain active for 10 minutes.',
         },
       ],
       description: 'Message templates for different use cases. Use {{code}} for verification code.',
+    },
+    {
+      key: 'translations',
+      label: 'Translations',
+      type: ConnectorConfigFormItemType.Json,
+      required: false,
+      isDevFeature: true,
+      description:
+        'Localization dictionaries for {{t.key}} template placeholders, keyed by language tag (e.g. { "ka": { "greeting": "გამარჯობა" } }).',
     },
   ],
 };
