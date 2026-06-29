@@ -37,6 +37,14 @@ export const ubillSmsConfigGuard = z.object({
     ]),
   // Optional: localization dictionaries for `{{t.key}}` template placeholders.
   translations: z.record(z.record(z.string())).optional(),
+  // Optional: Unified template editor (dev-flagged, console-only) source fields. Consumed only by
+  // the admin console's Unified editor; `sendMessage` never reads them. The console compiles them
+  // into the runtime `templates` + `translations` shapes on save, so they are persisted purely so
+  // reopening the editor rehydrates the unified source.
+  unifiedTemplate: z.record(z.unknown()).optional(),
+  variables: z.record(z.unknown()).optional(),
+  unifiedTranslations: z.record(z.unknown()).optional(),
+  templateEditorMode: z.string().optional(),
 });
 
 export type UbillSmsConfig = z.infer<typeof ubillSmsConfigGuard>;
