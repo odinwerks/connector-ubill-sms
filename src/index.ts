@@ -12,11 +12,12 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  getLocalizedPayload,
   replaceSendMessageHandlebars,
+  TemplateType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
-import { getLocalizedPayload } from './localization.js';
 import type { UbillSmsResponse } from './types.js';
 import { ubillSmsConfigGuard } from './types.js';
 
@@ -29,8 +30,11 @@ const sendMessage =
 
     const { apiKey, brandId, apiUrl, templates, translations } = config;
 
-    // Find template for the message type
-    const template = templates.find((template) => template.usageType === type);
+    // Find template for the message type, falling back to Generic when the requested type is
+    // not configured.
+    const template =
+      templates.find((templateItem) => templateItem.usageType === type) ??
+      templates.find((templateItem) => templateItem.usageType === TemplateType.Generic);
 
     assert(
       template,
