@@ -1,10 +1,5 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
-  entry: ['src/index.ts'],
-  outDir: 'lib',
-  format: ['esm'],
-  dts: false,
-  sourcemap: true,
-  clean: true,
-});
+import { defaultConfig } from '../../../tsup.shared.config.js';
+
+export default defineConfig(defaultConfig);
