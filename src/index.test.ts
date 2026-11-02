@@ -123,4 +123,40 @@ describe('Ubill SMS connector', () => {
 
     expect(mockedPost.isDone()).toBe(true);
   });
+
+  it('falls back to the Generic template when the requested type is not configured', async () => {
+    const url = new URL(apiUrl);
+    const mockedPost = nock(url.origin)
+      .post(url.pathname, (body) => {
+        expect(body).toMatchObject({
+          text: 'Your verification code is 123456. The code will remain active for 10 minutes.',
+        });
+        return true;
+      })
+      .reply(200, { statusID: 0, smsID: 'sms-4', message: 'OK' });
+
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage(
+      {
+        to: '+995591234567',
+        type: TemplateType.OrganizationInvitation,
+        payload: { code: '123456' },
+      },
+      {
+        ...mockedConfig,
+        templates: [
+          { usageType: 'SignIn', content: 'code {{code}}' },
+          { usageType: 'Register', content: 'code {{code}}' },
+          { usageType: 'ForgotPassword', content: 'code {{code}}' },
+          {
+            usageType: 'Generic',
+            content:
+              'Your verification code is {{code}}. The code will remain active for 10 minutes.',
+          },
+        ],
+      }
+    );
+
+    expect(mockedPost.isDone()).toBe(true);
+  });
 });

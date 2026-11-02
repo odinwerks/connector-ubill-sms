@@ -177,6 +177,71 @@ Templates are configured as a JSON array. Example:
 - Can include emojis or special characters if supported by carrier
 - Maximum 160 characters recommended
 
+## Localization
+
+The connector supports locale-aware SMS content. You can provide translations for message strings and reference them in templates using `{{t.key}}` placeholders.
+
+### Adding translations
+
+Add a `translations` object to your connector config. It is a dictionary keyed by language tag (for example, `en` or `ka-GE`):
+
+```json
+{
+  "translations": {
+    "en": {
+      "signInTitle": "Sign in",
+      "registerTitle": "Register",
+      "code": "Your code is {{code}}"
+    },
+    "ka-GE": {
+      "signInTitle": "შესვლა",
+      "registerTitle": "რეგისტრაცია",
+      "code": "თქვენი კოდია {{code}}"
+    }
+  }
+}
+```
+
+### Using placeholders in templates
+
+Reference translation keys in template content with `{{t.<key>}}`. The `{{code}}` placeholder is still required.
+
+```json
+[
+  {
+    "usageType": "SignIn",
+    "content": "{{t.signInTitle}}: {{t.code}}"
+  },
+  {
+    "usageType": "Register",
+    "content": "{{t.registerTitle}}: {{t.code}}"
+  },
+  {
+    "usageType": "Generic",
+    "content": "Code: {{code}}"
+  }
+]
+```
+
+### Locale fallback chain
+
+When a user has locale `ka-GE`, the connector resolves translations in this order:
+
+1. Exact match: `ka-GE`
+2. Parent tag: `ka`
+3. Default: `en`
+4. Last resort: first available language
+
+For example, with translations for `ka-GE` and `en`, a user with locale `ka-GE` receives Georgian text, while a user with locale `de` falls back to English (`en`).
+
+### Generic template fallback
+
+If a template for a specific usage type (for example, `BindNewIdentifier`) is not configured, the connector falls back to the template with `usageType: Generic`. Make sure a `Generic` template is defined as a catch-all.
+
+### Runtime locale
+
+The user's locale is passed at runtime as `payload.locale` from logto-server. Region tags are preserved verbatim, so `ka-GE` stays `ka-GE` and is not normalized to `ka`.
+
 ## Phone Number Validation
 
 ### Validation Rules
@@ -529,7 +594,6 @@ docker-compose logs logto --tail 50 | grep -i ubill
 - Full Logto integration
 
 **Planned Features**:
-- Multi-language support
 - Delivery reports
 - Advanced error handling
 - Performance optimizations
